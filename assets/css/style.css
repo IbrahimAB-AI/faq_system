@@ -1,0 +1,513 @@
+/* Main stylesheet */
+
+/* FAQ System - Modern Dark Theme Styles */
+
+/* ============================================
+   CSS Variables & Base
+   ============================================ */
+:root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --primary-light: #8b5cf6;
+    --accent: #06b6d4;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --dark-bg: #1a1a2e;
+    --dark-secondary: #16213e;
+    --light-bg: #f8f9fa;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --text-muted: #9ca3af;
+    --border-color: #e5e7eb;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --transition: all 0.3s ease;
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-secondary) 100%);
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    background: transparent;
+}
+
+/* ============================================
+   Navigation
+   ============================================ */
+.navbar {
+    background: rgba(26, 26, 46, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.navbar-brand i {
+    color: var(--primary);
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: white !important;
+    background: rgba(99, 102, 241, 0.2);
+}
+
+.dropdown-menu {
+    background: white;
+    border: none;
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--radius-lg);
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+}
+
+.dropdown-item:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* ============================================
+   Hero Section
+   ============================================ */
+.hero-section {
+    background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-secondary) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-bg-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.15) 0%, transparent 50%);
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ============================================
+   Search Form
+   ============================================ */
+.search-form .input-group {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+}
+
+.search-form .form-control {
+    border: none;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+}
+
+.search-form .form-control:focus {
+    box-shadow: none;
+}
+
+.search-form .btn-primary {
+    padding: 1rem 2rem;
+    border-radius: 0;
+    font-weight: 600;
+}
+
+/* ============================================
+   Cards
+   ============================================ */
+.category-card,
+.faq-card,
+.stat-card,
+.action-card,
+.form-card,
+.table-card,
+.search-result-card,
+.submission-card {
+    background: white;
+    transition: var(--transition);
+}
+
+.category-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl) !important;
+}
+
+.faq-card:hover {
+    background: #f8f9fa;
+    transform: translateX(4px);
+}
+
+.stat-card {
+    text-align: center;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.25rem;
+}
+
+.category-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+/* ============================================
+   Badges
+   ============================================ */
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+}
+
+/* ============================================
+   Forms
+   ============================================ */
+.form-control,
+.form-select {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-outline-primary {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+/* ============================================
+   Alerts
+   ============================================ */
+.alert {
+    border-radius: var(--radius-lg);
+    border: none;
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+}
+
+.alert-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+}
+
+.alert-warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning);
+}
+
+.alert-info {
+    background: rgba(6, 182, 212, 0.1);
+    color: var(--accent);
+}
+
+/* ============================================
+   Footer
+   ============================================ */
+footer {
+    background: rgba(26, 26, 46, 0.95) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   Accordion
+   ============================================ */
+.accordion-item {
+    border: none;
+    border-radius: var(--radius-lg) !important;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1rem;
+}
+
+.accordion-button {
+    background: white;
+    font-weight: 600;
+    padding: 1.25rem;
+}
+
+.accordion-button:not(.collapsed) {
+    background: white;
+    color: var(--primary);
+    box-shadow: none;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border: none;
+}
+
+.accordion-body {
+    background: white;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+/* ============================================
+   Breadcrumb
+   ============================================ */
+.breadcrumb-nav {
+    font-size: 0.9rem;
+}
+
+.breadcrumb-nav a {
+    color: var(--text-muted);
+}
+
+.breadcrumb-nav a:hover {
+    color: var(--primary);
+}
+
+/* ============================================
+   Tables
+   ============================================ */
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    border-bottom: 2px solid var(--border-color);
+    font-weight: 600;
+    color: var(--text-primary);
+    padding: 1rem;
+}
+
+.table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+/* ============================================
+   Activity & Stats
+   ============================================ */
+.activity-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+}
+
+.step-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   Auth Pages
+   ============================================ */
+.auth-page {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-secondary) 100%);
+    padding: 2rem 0;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 440px;
+}
+
+.auth-card {
+    background: white;
+}
+
+.auth-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.demo-box,
+.terms-note {
+    background: #f8f9fa;
+    border: 1px solid var(--border-color);
+}
+
+code {
+    background: #e9ecef;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.85em;
+}
+
+/* ============================================
+   Submit Question Page
+   ============================================ */
+.submit-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.how-it-works {
+    background: #f8f9fa;
+    border: 1px solid var(--border-color);
+}
+
+/* ============================================
+   FAQ Detail Page
+   ============================================ */
+.faq-answer {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+}
+
+.bookmark-btn:hover {
+    color: var(--primary);
+}
+
+.helpful-section {
+    background: #f8f9fa;
+    border-radius: var(--radius-lg);
+}
+
+/* ============================================
+   Admin Pages
+   ============================================ */
+.admin-page {
+    min-height: 100vh;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 768px) {
+    .hero-section .display-4 {
+        font-size: 2rem;
+    }
+    
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1.5rem !important;
+    }
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
