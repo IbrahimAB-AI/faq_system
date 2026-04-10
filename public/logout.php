@@ -5,6 +5,7 @@
  */
 
 require_once 'includes/auth.php';
+require_once 'includes/functions.php';
 
 // Clear session data
 if (session_status() === PHP_SESSION_NONE) {

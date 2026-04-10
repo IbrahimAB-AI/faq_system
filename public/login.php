@@ -10,6 +10,11 @@ require_once 'includes/auth.php';
 
 if (isLoggedIn()) {
     $redirect = $_GET['redirect'] ?? 'index.php';
+    // Validate redirect to prevent open redirect attacks
+    $allowedRedirects = ['index.php', 'search.php', 'category.php', 'faq.php', 'submit_question.php'];
+    if (!in_array($redirect, $allowedRedirects) && !preg_match('#^/faq_system/public/#', $redirect)) {
+        $redirect = 'index.php';
+    }
     redirect($redirect);
 }
 
@@ -32,6 +37,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result['success']) {
             loginUser($result['user']['user_id'], $result['user']['username'], $result['user']['role']);
             $redirect = $_POST['redirect'] ?? 'index.php';
+            // Validate redirect to prevent open redirect attacks
+            $allowedRedirects = ['index.php', 'search.php', 'category.php', 'faq.php', 'submit_question.php'];
+            if (!in_array($redirect, $allowedRedirects) && !preg_match('#^/faq_system/public/#', $redirect)) {
+                $redirect = 'index.php';
+            }
             redirect($redirect);
         } else {
             $error = $result['error'];

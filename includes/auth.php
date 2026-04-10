@@ -6,6 +6,11 @@
  * Handles session management, login validation, CSRF protection, and role-based access
  */
 
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 /**
  * Generate CSRF token
  * @return string
@@ -121,8 +126,9 @@ function logoutUser() {
     $_SESSION = [];
     session_destroy();
     
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
+    // Clear session cookie
+    if (isset($_COOKIE[session_name()])) {
+        setcookie(session_name(), '', time() - 3600, '/');
     }
 }
 
