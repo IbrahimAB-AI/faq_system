@@ -32,19 +32,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
         
-        $result = validateLogin($email, $password);
-        
-        if ($result['success']) {
-            loginUser($result['user']['user_id'], $result['user']['username'], $result['user']['role']);
-            $redirect = $_POST['redirect'] ?? 'index.php';
-            // Validate redirect to prevent open redirect attacks
-            $allowedRedirects = ['index.php', 'search.php', 'category.php', 'faq.php', 'submit_question.php'];
-            if (!in_array($redirect, $allowedRedirects) && !preg_match('#^/faq_system/public/#', $redirect)) {
-                $redirect = 'index.php';
-            }
-            redirect($redirect);
+        if (empty($email) || empty($password)) {
+            $error = 'Please enter both email and password.';
         } else {
-            $error = $result['error'];
+            $result = validateLogin($email, $password);
+            
+            if ($result['success']) {
+                loginUser($result['user']['user_id'], $result['user']['username'], $result['user']['role']);
+                $redirect = $_POST['redirect'] ?? 'index.php';
+                // Validate redirect to prevent open redirect attacks
+                $allowedRedirects = ['index.php', 'search.php', 'category.php', 'faq.php', 'submit_question.php'];
+                if (!in_array($redirect, $allowedRedirects) && !preg_match('#^/faq_system/public/#', $redirect)) {
+                    $redirect = 'index.php';
+                }
+                redirect($redirect);
+            } else {
+                $error = $result['error'];
+            }
         }
     }
 }

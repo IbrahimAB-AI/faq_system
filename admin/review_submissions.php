@@ -25,13 +25,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['review_submission']))
         $answer = trim($_POST['answer'] ?? '');
         $categoryId = (int)($_POST['category_id'] ?? 0);
         
+        $question = trim($_POST['question'] ?? '');
+        $answer = trim($_POST['answer'] ?? '');
+        $categoryId = (int)($_POST['category_id'] ?? 0);
+        
         if (!$submissionId || !in_array($action, ['approve', 'dismiss'])) {
             setError('Invalid request.');
-        } elseif ($action === 'approve' && (empty($question) || empty($answer) || $categoryId === 0)) {
-            setError('Question, answer, and category are required to approve.');
+        } elseif ($action === 'approve' && empty($question)) {
+            setError('Question is required to approve.');
+        } elseif ($action === 'approve' && strlen($question) < 5) {
+            setError('Question must be at least 5 characters to approve.');
+        } elseif ($action === 'approve' && empty($answer)) {
+            setError('Answer is required to approve.');
+        } elseif ($action === 'approve' && strlen($answer) < 10) {
+            setError('Answer must be at least 10 characters to approve.');
+        } elseif ($action === 'approve' && $categoryId === 0) {
+            setError('Category is required to approve.');
         } else {
             try {
                 if ($action === 'approve') {
+                    // Sanitize admin-approved content
+                    $question = strip_tags($question);
+                    $answer = strip_tags($answer, '<p><br><strong><em><ul><ol><li><a><code><pre>');
+                    
                     executeQuery(
                         "INSERT INTO faqs (question, answer, category_id, created_by) VALUES (?, ?, ?, ?)",
                         [$question, $answer, $categoryId, $_SESSION['user_id']]
@@ -53,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['review_submission']))
                 }
             } catch (Exception $e) {
                 error_log("Review submission error: " . $e->getMessage());
-                setError('Failed to process submission.');
+                setError('Failed to process submission. Please try again.');
             }
         }
     }

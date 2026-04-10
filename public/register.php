@@ -24,7 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $password = $_POST['password'] ?? '';
         $confirmPassword = $_POST['confirm_password'] ?? '';
         
-        if ($password !== $confirmPassword) {
+        if (empty($username) || empty($email) || empty($password)) {
+            $error = 'All fields are required.';
+        } elseif ($password !== $confirmPassword) {
             $error = 'Passwords do not match.';
         } else {
             $result = registerUser($username, $email, $password);

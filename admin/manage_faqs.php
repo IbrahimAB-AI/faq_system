@@ -32,11 +32,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_faq'])) {
         $question = trim($_POST['question'] ?? '');
         $answer = trim($_POST['answer'] ?? '');
         $categoryId = (int)($_POST['category_id'] ?? 0);
-        $faqId = isset($_POST['faq_id']) ? (int)$_POST['faq_id'] : null;
         
-        if (empty($question) || empty($answer) || $categoryId === 0) {
-            setError('All fields are required.');
+        // Validate and sanitize input
+        if (empty($question)) {
+            setError('Question is required.');
+        } elseif (strlen($question) < 5) {
+            setError('Question must be at least 5 characters.');
+        } elseif (strlen($question) > 500) {
+            setError('Question must not exceed 500 characters.');
+        } elseif (empty($answer)) {
+            setError('Answer is required.');
+        } elseif (strlen($answer) < 10) {
+            setError('Answer must be at least 10 characters.');
+        } elseif ($categoryId === 0) {
+            setError('Please select a category.');
         } else {
+            // Basic HTML sanitization for admin content
+            $question = strip_tags($question);
+            $answer = strip_tags($answer, '<p><br><strong><em><ul><ol><li><a><code><pre>');
+            
             try {
                 if ($faqId) {
                     executeQuery(
@@ -52,7 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_faq'])) {
                     setSuccess('FAQ created successfully.');
                 }
             } catch (Exception $e) {
-                setError('Failed to save FAQ.');
+                error_log("FAQ save error: " . $e->getMessage());
+                setError('Failed to save FAQ. Please try again.');
             }
         }
     }

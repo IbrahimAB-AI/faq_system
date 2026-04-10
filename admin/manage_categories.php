@@ -39,16 +39,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_category'])) {
         $description = trim($_POST['description'] ?? '');
         $categoryId = isset($_POST['category_id']) ? (int)$_POST['category_id'] : null;
         
+        // Validate input
         if (empty($categoryName)) {
             setError('Category name is required.');
+        } elseif (strlen($categoryName) < 2) {
+            setError('Category name must be at least 2 characters.');
+        } elseif (strlen($categoryName) > 100) {
+            setError('Category name must not exceed 100 characters.');
+        } elseif (strlen($description) > 255) {
+            setError('Description must not exceed 255 characters.');
         } else {
+            // Sanitize input
+            $categoryName = strip_tags($categoryName);
+            $description = strip_tags($description);
+            
             try {
                 if ($categoryId) {
-                    executeQuery(
-                        "UPDATE categories SET category_name = ?, description = ? WHERE category_id = ?",
-                        [$categoryName, $description, $categoryId]
-                    );
-                    setSuccess('Category updated successfully.');
+                    // Check if name conflicts with other categories
+                    $existing = fetchOne("SELECT category_id FROM categories WHERE category_name = ? AND category_id != ?", [$categoryName, $categoryId]);
+                    if ($existing) {
+                        setError('Category name already exists.');
+                    } else {
+                        executeQuery(
+                            "UPDATE categories SET category_name = ?, description = ? WHERE category_id = ?",
+                            [$categoryName, $description, $categoryId]
+                        );
+                        setSuccess('Category updated successfully.');
+                    }
                 } else {
                     $existing = fetchOne("SELECT category_id FROM categories WHERE category_name = ?", [$categoryName]);
                     if ($existing) {
@@ -62,7 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_category'])) {
                     }
                 }
             } catch (Exception $e) {
-                setError('Failed to save category.');
+                error_log("Category save error: " . $e->getMessage());
+                setError('Failed to save category. Please try again.');
             }
         }
     }

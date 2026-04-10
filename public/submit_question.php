@@ -21,12 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $question = trim($_POST['question'] ?? '');
         $categoryId = !empty($_POST['category_id']) ? (int)$_POST['category_id'] : null;
         
+        // Enhanced validation
         if (empty($question)) {
             $error = 'Please enter your question.';
         } elseif (strlen($question) < 10) {
             $error = 'Question must be at least 10 characters.';
         } elseif (strlen($question) > 500) {
             $error = 'Question must not exceed 500 characters.';
+        } elseif (preg_match('/<[^>]*>/', $question)) {
+            $error = 'HTML tags are not allowed in questions.';
         } else {
             try {
                 executeQuery(

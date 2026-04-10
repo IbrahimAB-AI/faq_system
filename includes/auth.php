@@ -143,25 +143,30 @@ function validateLogin($email, $password) {
         return ['success' => false, 'user' => null, 'error' => 'Invalid email format'];
     }
     
-    $user = fetchOne(
-        "SELECT user_id, username, email, password_hash, role FROM users WHERE email = ?",
-        [$email]
-    );
-    
-    if (!$user) {
-        return ['success' => false, 'user' => null, 'error' => 'Invalid email or password'];
+    try {
+        $user = fetchOne(
+            "SELECT user_id, username, email, password_hash, role FROM users WHERE email = ?",
+            [$email]
+        );
+        
+        if (!$user) {
+            return ['success' => false, 'user' => null, 'error' => 'Invalid email or password'];
+        }
+        
+        if (!password_verify($password, $user['password_hash'])) {
+            return ['success' => false, 'user' => null, 'error' => 'Invalid email or password'];
+        }
+        
+        if (password_get_info($user['password_hash'])['algo'] === 0) {
+            $newHash = password_hash($password, PASSWORD_DEFAULT);
+            executeQuery("UPDATE users SET password_hash = ? WHERE user_id = ?", [$newHash, $user['user_id']]);
+        }
+        
+        return ['success' => true, 'user' => $user, 'error' => null];
+    } catch (Exception $e) {
+        error_log("Login validation error: " . $e->getMessage());
+        return ['success' => false, 'user' => null, 'error' => 'Login failed. Please try again.'];
     }
-    
-    if (!password_verify($password, $user['password_hash'])) {
-        return ['success' => false, 'user' => null, 'error' => 'Invalid email or password'];
-    }
-    
-    if (password_get_info($user['password_hash'])['algo'] === 0) {
-        $newHash = password_hash($password, PASSWORD_DEFAULT);
-        executeQuery("UPDATE users SET password_hash = ? WHERE user_id = ?", [$newHash, $user['user_id']]);
-    }
-    
-    return ['success' => true, 'user' => $user, 'error' => null];
 }
 
 /**
@@ -189,19 +194,20 @@ function registerUser($username, $email, $password) {
         return ['success' => false, 'user_id' => null, 'error' => 'Password must be at least 6 characters'];
     }
     
-    $existing = fetchOne("SELECT user_id FROM users WHERE username = ?", [$username]);
-    if ($existing) {
-        return ['success' => false, 'user_id' => null, 'error' => 'Username already taken'];
-    }
-    
-    $existing = fetchOne("SELECT user_id FROM users WHERE email = ?", [$email]);
-    if ($existing) {
-        return ['success' => false, 'user_id' => null, 'error' => 'Email already registered'];
-    }
-    
-    $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-    
+    // Check for existing users
     try {
+        $existing = fetchOne("SELECT user_id FROM users WHERE username = ?", [$username]);
+        if ($existing) {
+            return ['success' => false, 'user_id' => null, 'error' => 'Username already taken'];
+        }
+        
+        $existing = fetchOne("SELECT user_id FROM users WHERE email = ?", [$email]);
+        if ($existing) {
+            return ['success' => false, 'user_id' => null, 'error' => 'Email already registered'];
+        }
+        
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        
         executeQuery("INSERT INTO users (username, email, password_hash, role) VALUES (?, ?, ?, 'user')", [$username, $email, $passwordHash]);
         return ['success' => true, 'user_id' => getLastInsertId(), 'error' => null];
     } catch (Exception $e) {
